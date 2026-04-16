@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Gerador de códigos CSS com IA - Descreva o que você quer e a IA gera o código"
+    />
+    <meta name="author" content="Seu nome aqui" />
+    <title>NEXTSTAGE | Gerador de CSS com IA</title>
+
+    <!-- Fontes e estilos -->
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <h1 class="titulo">
+      Gerador de códigos CSS
+      <span class="titulo-cor">com IA</span>
+      <span class="raio" aria-hidden="true">⚡︎</span>
+    </h1>
+
+    <p class="descricao">
+      Digite o que deseja e o código será gerado automaticamente
+    </p>
+
+    <!-- ÁREA DE ENTRADA -->
+    <!-- name="prompt" facilita identificar o campo no backend -->
+    <textarea
+      placeholder="Ex: Crie um botão roxo sombreado."
+      rows="3"
+      name="prompt"
+    ></textarea>
+
+    <button class="btn-codigo">Gerar Código</button>
+
+    <!-- ÁREA DE RESULTADOS -->
+    <div class="resultados">
+      <div class="codigo">
+        <h2>Código</h2>
+        <!-- Aqui vai mostrar o código gerado (com syntax highlighting via CSS) -->
+        <p class="codigo-descricao"></p>
+      </div>
+
+      <div class="codigo">
+        <h2>Preview</h2>
+        <!-- iframe para exibir o resultado visual do código gerado -->
+        <iframe class="codigo-acao"></iframe>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
