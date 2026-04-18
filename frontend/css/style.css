@@ -140,6 +140,11 @@ textarea:focus {
   max-width: 500px;
 }
 
+.icon{
+  width: 10px;
+  height: 10px;
+}
+
 /* ==================== */
 /* RESPONSIVIDADE       */
 /* ==================== */
