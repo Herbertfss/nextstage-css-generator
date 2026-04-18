@@ -1,0 +1,16 @@
+{
+  "env": {
+    "node": true, // Permite o uso de variáveis e APIs do Node.js
+    "browser": true, // Permite o uso de variáveis e APIs do navegador
+    "es2021": true // Permite o uso de recursos do ECMAScript 2021
+  },
+  "extends": "eslint:recommended", // Usa as regras recomendadas do ESLint
+  "parserOptions": {
+    "ecmaVersion": "latest", // Especifica a versão mais recente do ECMAScript
+    "sourceType": "module" // Permite o uso de módulos ES6
+  },
+  "rules": {
+    "no-unused-vars": "warn", // Emite um aviso para variáveis não utilizadas
+    "no-console": "off" // Permite o uso de console.log e outros métodos do console
+  }
+}
