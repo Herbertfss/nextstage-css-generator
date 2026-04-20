@@ -3,7 +3,7 @@
 /* ============================================ */
 
 // Endereço do backend (ajuste se o backend estiver em outro lugar)
-const API_URL = "http://localhost:3000/gerar-codigo";
+const API_URL = "https://nextstage-css-generator.onrender.com/gerar-codigo";
 
 /* ============================================ */
 /* ELEMENTOS DA PÁGINA (DOM)
