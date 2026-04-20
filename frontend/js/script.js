@@ -1,73 +1,116 @@
-// ============================================
-// CONFIGURAÇÃO
-// ============================================
+/* ============================================ */
+/* CONFIGURAÇÃO DO BACKEND
+/* ============================================ */
 
-// Endereço do nosso backend (rodando localmente na porta 3000)
-// Se mudar a porta do servidor, atualizar aqui também
+// Endereço do backend (ajuste se o backend estiver em outro lugar)
 const API_URL = "http://localhost:3000/gerar-codigo";
 
-// ============================================
-// DOM ELEMENTS (referências para manipular a página)
-// ============================================
+/* ============================================ */
+/* ELEMENTOS DA PÁGINA (DOM)
+/* ============================================ */
 
 const botao = document.querySelector(".btn-codigo");
 const textarea = document.querySelector("textarea");
 const codigoDescricao = document.querySelector(".codigo-descricao");
 const codigoAcao = document.querySelector(".codigo-acao");
 
-// ============================================
-// EVENT LISTENERS (o que acontece quando o usuário interage)
-// ============================================
+/* ============================================ */
+/* EVENTOS (o que acontece quando o usuário interage)
+/* ============================================ */
 
-// Clique no botão principal
+// Clique no botão "Gerar código"
 botao.addEventListener("click", gerarCodigo);
 
-// Atalho de teclado: Ctrl + Enter no textarea também dispara a geração
+// Atalho Ctrl + Enter no textarea
 textarea.addEventListener("keydown", (event) => {
   if (event.key === "Enter" && event.ctrlKey) {
     gerarCodigo();
   }
 });
 
-// ============================================
-// FUNÇÃO PRINCIPAL
-// ============================================
+/* ============================================ */
+/* FUNÇÃO PRINCIPAL - CHAMA O BACKEND E MOSTRA O RESULTADO
+/* ============================================ */
 
-/**
- * Faz a requisição para o backend e atualiza a tela com o resultado
- * É async porque precisa esperar a resposta da API
- */
 async function gerarCodigo() {
-  // Remove espaços desnecessários do início e fim
+  // pega o texto que o usuário digitou e remove espaços extras
   const textoUsuario = textarea.value.trim();
 
-  // --- Validações simples (evita requisições desnecessárias) ---
+  // validação 1: campo vazio
   if (!textoUsuario) {
     mostrarErro("Digite algo para gerar o código");
-    textarea.focus(); // devolve o foco pro usuário corrigir
+    textarea.focus();
     return;
   }
 
+  // validação 2: texto muito curto (menos de 5 caracteres)
   if (textoUsuario.length < 5) {
     mostrarErro("Digite pelo menos 5 caracteres");
     return;
   }
 
-  // --- Feedback visual de loading ---
-  // Desabilita o botão para evitar cliques duplicados
+  // ========== ESTADO DE CARREGAMENTO ==========
+
+  // desabilita o botão para evitar cliques duplicados
   botao.disabled = true;
-  botao.textContent = "⏳ Gerando...";
+  botao.innerHTML = `
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation: girar 1s linear infinite;">
+      <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none" stroke-dasharray="30 8"/>
+    </svg>
+    <span>Processando...</span>
+  `;
 
-  // Mostra mensagem animada na área de código
-  codigoDescricao.innerHTML =
-    '<p style="color: #888;">✨ Gerando código com IA... ✨</p>';
+  // mostra loading na área do código
+  codigoDescricao.innerHTML = `
+    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; padding: 40px 20px;">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2" style="animation: girar 1s linear infinite;">
+        <circle cx="12" cy="12" r="10" stroke="#a78bfa" stroke-width="2" fill="none" stroke-dasharray="30 8"/>
+      </svg>
+      <p style="color: #a78bfa; font-family: monospace; font-size: 13px;">Gerando código com IA...</p>
+    </div>
+  `;
 
-  // Preview fica em estado de carregamento
-  codigoAcao.srcdoc =
-    "<html><body style='display:flex;align-items:center;justify-content:center;height:100vh;color:#888;'>⏳ Carregando preview...</body></html>";
+  // mostra loading no preview
+  codigoAcao.srcdoc = `
+    <html>
+      <head>
+        <style>
+          body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background: #0a0a0f;
+            font-family: monospace;
+          }
+          svg {
+            animation: girar 1s linear infinite;
+          }
+          @keyframes girar {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+          }
+          p {
+            color: #a78bfa;
+            margin-top: 16px;
+            font-size: 13px;
+          }
+        </style>
+      </head>
+      <body>
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2">
+          <circle cx="12" cy="12" r="10" stroke="#a78bfa" stroke-width="2" fill="none" stroke-dasharray="30 8"/>
+        </svg>
+        <p>Carregando preview...</p>
+      </body>
+    </html>
+  `;
+
+  // ========== CHAMADA PARA O BACKEND ==========
 
   try {
-    // --- Chamada para o nosso backend (não mais para a Groq direto) ---
     const resposta = await fetch(API_URL, {
       method: "POST",
       headers: {
@@ -76,7 +119,7 @@ async function gerarCodigo() {
       body: JSON.stringify({ prompt: textoUsuario }),
     });
 
-    // Se o backend respondeu com status 400, 500, etc. 
+    // se o backend respondeu com erro (400, 500, etc.)
     if (!resposta.ok) {
       const erro = await resposta.json();
       throw new Error(erro.erro || "Erro na requisição");
@@ -84,47 +127,44 @@ async function gerarCodigo() {
 
     const dados = await resposta.json();
 
-    // Verifica se veio o campo esperado
+    // verifica se veio o código esperado
     if (dados.sucesso && dados.codigo) {
-      // Escapa caracteres especiais para mostrar o código como texto (não executar)
+      // escapa caracteres especiais para não executar HTML
       const codigoEscapado = escaparHTML(dados.codigo);
 
-      // Exibe o código na área esquerda
-      codigoDescricao.innerHTML = `
-        <pre style="background:#141419; color:#5f009f; padding:20px; border-radius:10px; overflow:auto; font-family:monospace; margin:0; text-align:left; white-space:pre-wrap; word-break:break-word;">${codigoEscapado}</pre>
-      `;
+      // mostra o código na área esquerda
+      codigoDescricao.innerHTML = `<pre>${codigoEscapado}</pre>`;
 
-      // Atualiza o iframe com o preview do código gerado
+      // mostra o preview na área direita
       codigoAcao.srcdoc = dados.codigo;
+
+      // rola a página suavemente até a área de resultados
+      const resultados = document.querySelector(".resultados");
+      if (resultados) {
+        resultados.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
     } else {
       throw new Error("Resposta inválida do servidor");
     }
   } catch (erro) {
-    // Qualquer erro (rede, backend fora do ar, etc.) cai aqui
-    console.error("Erro:", erro);
+    // qualquer erro cai aqui (rede, servidor fora, etc.)
     mostrarErro(
       erro.message ||
-        "Erro ao gerar código. Verifique se o servidor está rodando.",
+        "Erro ao gerar código. Verifique se o servidor está rodando."
     );
-    codigoDescricao.innerHTML = `<p style="color: #ff6b6b;">❌ ${
-      erro.message || "Erro desconhecido"
-    }</p>`;
+    codigoDescricao.innerHTML = `<p style="color: #ff6b6b;">❌ ${erro.message || "Erro desconhecido"}</p>`;
   } finally {
-    // Restaura o botão independente de sucesso ou erro
+    // restaura o botão (sempre, mesmo se der erro)
     botao.disabled = false;
-    botao.textContent = "Gerar Código";
+    botao.innerHTML = `<span>Gerar código</span>`;
   }
 }
 
-// ============================================
-// FUNÇÕES AUXILIARES
-// ============================================
+/* ============================================ */
+/* FUNÇÕES AUXILIARES
+/* ============================================ */
 
-/**
- * Converte caracteres especiais em entidades HTML
- * Ex: < vira &lt; - assim o navegador mostra como texto, não interpreta como tag
- * Isso previne XSS (Cross-Site Scripting)
- */
+// escapa caracteres especiais para evitar XSS (Cross-Site Scripting)
 function escaparHTML(str) {
   return str
     .replace(/&/g, "&amp;")
@@ -134,10 +174,7 @@ function escaparHTML(str) {
     .replace(/'/g, "&#39;");
 }
 
-/**
- * Exibe uma mensagem temporária no canto inferior direito
- * O elemento some sozinho após 3 segundos
- */
+// mostra uma mensagem temporária no canto inferior direito
 function mostrarErro(mensagem) {
   const erroDiv = document.createElement("div");
   erroDiv.textContent = mensagem;
@@ -154,13 +191,13 @@ function mostrarErro(mensagem) {
   `;
   document.body.appendChild(erroDiv);
 
-  // Remove o elemento após 3 segundos (tempo suficiente para ler)
+  // remove a mensagem após 3 segundos
   setTimeout(() => {
     erroDiv.remove();
   }, 3000);
 }
 
-// Adiciona a animação de fadeIn dinamicamente 
+// adiciona a animação de fadeIn para as mensagens de erro
 if (!document.querySelector("#animacao-erro")) {
   const style = document.createElement("style");
   style.id = "animacao-erro";
@@ -171,4 +208,18 @@ if (!document.querySelector("#animacao-erro")) {
     }
   `;
   document.head.appendChild(style);
+}
+
+// ============================================
+// BOTÃO VOLTAR AO TOPO
+// ============================================
+
+const btnTopo = document.getElementById("btn-topo");
+if (btnTopo) {
+  btnTopo.addEventListener("click", () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  });
 }
