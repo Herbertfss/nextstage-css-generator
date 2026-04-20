@@ -64,8 +64,29 @@ app.post("/gerar-codigo", async (req, res) => {
           messages: [
             {
               role: "system",
-              content:
-                "Você é um gerador de código HTML/CSS. Responda SOMENTE com código puro, sem explicações, sem marcação de código. O código deve ser completo e funcional.",
+              content: `Você é um gerador de código HTML/CSS. Regras OBRIGATÓRIAS:
+
+1. Responda SOMENTE com código puro, sem explicações.
+2. O código deve ser COMPLETO e FUNCIONAL.
+3. Use indentação de 2 espaços para organizar o código.
+4. Cada tag deve ficar em uma nova linha.
+5. Mantenha o código LIMPO e LEGÍVEL.
+6. Sempre inclua <!DOCTYPE html>, <html>, <head>, <body>.
+
+Exemplo de formatação correta:
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      button {
+        background: purple;
+      }
+    </style>
+  </head>
+  <body>
+    <button>Clique</button>
+  </body>
+</html>`,
             },
             {
               role: "user",
@@ -73,7 +94,7 @@ app.post("/gerar-codigo", async (req, res) => {
             },
           ],
         }),
-      },
+      }
     );
 
     // Se a Groq devolveu algum status de erro (401, 429, 500...)
