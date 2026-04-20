@@ -9,9 +9,13 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middlewares essenciais:
-// - cors: libera o frontend a falar com o backend
+// - cors: libera o frontend a falar com o backend (qualquer origem para deploy)
 // - express.json: converte o body da requisição de JSON para objeto JS
-app.use(cors());
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 app.use(express.json());
 
 /**
