@@ -497,6 +497,7 @@ textarea:focus {
 /* ============================================ */
 
 .cartao-vidro {
+  position: relative;
   background: var(--glass-bg);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
@@ -787,6 +788,34 @@ textarea:focus {
 .rodape-copyright p {
   font-size: 11px;
   color: var(--text-muted);
+}
+
+/* ============================================ */
+/* BOTÃO COPIAR CÓDIGO
+/* ============================================ */
+
+.btn-copiar {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: rgba(167, 139, 250, 0.15);
+  border: 1px solid var(--glass-border);
+  border-radius: 6px;
+  color: var(--purple);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.2s;
+  backdrop-filter: blur(4px);
+}
+
+.btn-copiar:hover {
+  background: rgba(167, 139, 250, 0.3);
+  border-color: var(--purple);
 }
 
 /* responsividade */

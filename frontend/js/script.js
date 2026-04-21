@@ -13,6 +13,7 @@ const botao = document.querySelector(".btn-codigo");
 const textarea = document.querySelector("textarea");
 const codigoDescricao = document.querySelector(".codigo-descricao");
 const codigoAcao = document.querySelector(".codigo-acao");
+const btnCopiar = document.getElementById("btn-copiar");
 
 /* ============================================ */
 /* EVENTOS (o que acontece quando o usuário interage)
@@ -33,6 +34,9 @@ textarea.addEventListener("keydown", (event) => {
 /* ============================================ */
 
 async function gerarCodigo() {
+  // Esconde o botão copiar no início de cada nova geração
+  btnCopiar.style.display = "none";
+
   // pega o texto que o usuário digitou e remove espaços extras
   const textoUsuario = textarea.value.trim();
 
@@ -61,7 +65,7 @@ async function gerarCodigo() {
   `;
 
   // mostra loading na área do código
-codigoDescricao.innerHTML = `
+  codigoDescricao.innerHTML = `
   <div class="loading-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; padding: 40px 20px;">
     <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2" style="animation: girar 1s linear infinite;">
       <circle cx="12" cy="12" r="10" stroke="#a78bfa" stroke-width="2" fill="none" stroke-dasharray="30 8"/>
@@ -138,6 +142,22 @@ codigoDescricao.innerHTML = `
       // mostra o preview na área direita
       codigoAcao.srcdoc = dados.codigo;
 
+      // Mostra o botão copiar
+      btnCopiar.style.display = "flex";
+      btnCopiar.onclick = async () => {
+        await navigator.clipboard.writeText(dados.codigo);
+
+        // Salva o texto original do botão
+        const textoOriginal = btnCopiar.innerHTML;
+
+        // Muda para "Copiado!" temporariamente
+        btnCopiar.innerHTML = `Copiado! ✅`;
+
+        // Volta ao normal após 2 segundos
+        setTimeout(() => {
+          btnCopiar.innerHTML = textoOriginal;
+        }, 2000);
+      };
       // rola a página suavemente até a área de resultados
       const resultados = document.querySelector(".resultados");
       if (resultados) {
