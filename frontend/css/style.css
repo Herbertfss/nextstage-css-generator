@@ -818,6 +818,43 @@ textarea:focus {
   border-color: var(--purple);
 }
 
+/* ============================================ */
+/* BOTÃO LIMPAR TUDO
+/* ============================================ */
+
+.container-limpar {
+  display: flex;
+  justify-content: center;
+  margin-top: 32px;
+  margin-bottom: 20px;
+}
+
+.btn-limpar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 20px;
+  background: transparent;
+  border: 1px solid var(--glass-border-bright);
+  border-radius: 8px;
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-limpar:hover {
+  border-color: #ff6b6b;
+  color: #ff6b6b;
+  background: rgba(255, 107, 107, 0.05);
+  transform: translateY(-1px);
+}
+
+.btn-limpar:active {
+  transform: translateY(0);
+}
+
 /* responsividade */
 @media (max-width: 768px) {
   .rodape {

@@ -14,6 +14,7 @@ const textarea = document.querySelector("textarea");
 const codigoDescricao = document.querySelector(".codigo-descricao");
 const codigoAcao = document.querySelector(".codigo-acao");
 const btnCopiar = document.getElementById("btn-copiar");
+const btnLimpar = document.getElementById("btn-limpar");
 
 /* ============================================ */
 /* EVENTOS (o que acontece quando o usuário interage)
@@ -228,6 +229,29 @@ if (!document.querySelector("#animacao-erro")) {
     }
   `;
   document.head.appendChild(style);
+}
+
+// ============================================
+// BOTÃO LIMPAR TUDO
+// ============================================
+
+if (btnLimpar) {
+  btnLimpar.addEventListener("click", () => {
+    // Limpa o textarea
+    textarea.value = "";
+    textarea.focus();
+    
+    // Limpa a área de código
+    codigoDescricao.innerHTML = "";
+    
+    // Limpa o preview
+    codigoAcao.srcdoc = "";
+    
+    // Esconde o botão copiar
+    if (btnCopiar) {
+      btnCopiar.style.display = "none";
+    }
+  });
 }
 
 // ============================================
