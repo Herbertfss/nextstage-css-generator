@@ -61,14 +61,14 @@ async function gerarCodigo() {
   `;
 
   // mostra loading na área do código
-  codigoDescricao.innerHTML = `
-    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; padding: 40px 20px;">
-      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2" style="animation: girar 1s linear infinite;">
-        <circle cx="12" cy="12" r="10" stroke="#a78bfa" stroke-width="2" fill="none" stroke-dasharray="30 8"/>
-      </svg>
-      <p style="color: #a78bfa; font-family: monospace; font-size: 13px;">Gerando código com IA...</p>
-    </div>
-  `;
+codigoDescricao.innerHTML = `
+  <div class="loading-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; padding: 40px 20px;">
+    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2" style="animation: girar 1s linear infinite;">
+      <circle cx="12" cy="12" r="10" stroke="#a78bfa" stroke-width="2" fill="none" stroke-dasharray="30 8"/>
+    </svg>
+    <p style="color: #a78bfa; font-family: monospace; font-size: 13px;">Gerando código com IA...</p>
+  </div>
+`;
 
   // mostra loading no preview
   codigoAcao.srcdoc = `
